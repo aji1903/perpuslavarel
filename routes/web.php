@@ -12,6 +12,7 @@ Route::get('kurang', [\App\Http\Controllers\Belajarcontroller::class, 'kurang'])
 Route::post('store_kurang', [\App\Http\Controllers\Belajarcontroller::class, 'storeKurang'])->name('store_kurang');
 Route::resource('dashboard', \App\Http\Controllers\Dashboardcontroller::class);
 Route::resource('category', \App\Http\Controllers\Categorycontroller::class);
+Route::resource('books', \App\Http\Controllers\Bookscontroller::class);
 
 
 // Route::get('delete',$id);
