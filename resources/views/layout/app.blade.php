@@ -18,6 +18,8 @@
 <body class="hold-transition sidebar-mini">
     <!-- Site wrapper -->
     <div class="wrapper">
+        @include('sweetalert::alert')
+
         <!-- Navbar -->
         @include('layout.inc.nav')
         <!-- /.navbar -->
@@ -101,6 +103,50 @@
     <script src="{{asset('assets/adm/dist/js/adminlte.min.js')}}"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="{{asset('assets/adm/dist/js/demo.js')}}"></script>
+    <script>
+        $('#tambah-row').click(function () {
+            if ($(#category_id).val() == "") {
+                alert('Please select category');
+                return false;
+            }
+            let tbody = $("tbody");
+            let no = tbody.find("tr").length + 1, penerbit = $('#nama_penerbit').val(),
+                judul_buku = $('#buku_id').find("option:selected").text();
+            let newRow = "<tr>";
+            newRow += "<td>" + no + "</td>";
+            newRow += "<td>" + judul_buku + "</td>";
+            newRow += "<td>" + penerbit + "</td>";
+            newRow += "<td><button class='btn btn-danger btn-sm hapus-row'>Hapus Row</button></td>";
+            newRow += "</td>";
+            tbody.append(newRow);
+
+            $('.hapus-row').click(function () {
+                $(this).closest('tr').remove();
+            })
+        });
+        $('#category_id').change(function () {
+            // let id=document.getElementById('category_id')
+            let category_id = $(this).val(), option = "";
+            // console.log(category_id);
+            let category_name = $(this).find('option:selected').text();
+
+            $.ajax({
+                type: "get",
+                dataType: "json",
+                url: "/getBuku/" + category_id,
+                success: function (data) {
+                    option += "<option value=''>Pilih Judul Buku</option>"
+                    $.each(data.data, function (index, value) {
+                        $('#nama_penerbit').val(value.penerbit);
+                        // console.log(value);
+                        option += "<option value=" + value.id + ">" + value.judul + "</option>";
+                    });
+                    // console.log(option);
+                    $('#buku_id').html(option);
+                }
+            });
+        })
+    </script>
 </body>
 
 </html>

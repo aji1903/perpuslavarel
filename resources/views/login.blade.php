@@ -15,9 +15,12 @@
     <link rel="stylesheet" href="{{asset('assets/adm/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{asset('assets/adm/dist/css/adminlte.min.css')}}">
+
 </head>
 
 <body class="hold-transition login-page">
+    @include('sweetalert::alert')
+
     <div class="login-box">
         <div class="login-logo">
             <a href="../../index2.html"><b>Login</b>PANEL</a>

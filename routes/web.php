@@ -13,6 +13,8 @@ Route::post('store_kurang', [\App\Http\Controllers\Belajarcontroller::class, 'st
 Route::resource('dashboard', \App\Http\Controllers\Dashboardcontroller::class);
 Route::resource('category', \App\Http\Controllers\Categorycontroller::class);
 Route::resource('books', \App\Http\Controllers\Bookscontroller::class);
+Route::resource('pinjam', \App\Http\Controllers\Pinjamcontroller::class);
+Route::get('getBuku/{category_id}', [\App\Http\Controllers\AjaxController::class, 'getDataBuku']);
 
 
 // Route::get('delete',$id);
