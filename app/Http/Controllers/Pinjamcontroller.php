@@ -5,6 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\Anggota;
+use App\Models\Pinjam;
+use App\Models\DetailPinjam;
+use Illuminate\Support\Facades\Auth;
+use Alert;
+
 
 class Pinjamcontroller extends Controller
 {
@@ -13,7 +19,7 @@ class Pinjamcontroller extends Controller
      */
     public function index()
     {
-        $datas = Category::get();
+        $datas = pinjam::with('anggota')->get();
         return view('pinjam.index', compact('datas'));
     }
 
@@ -23,7 +29,13 @@ class Pinjamcontroller extends Controller
     public function create()
     {
         $categories = Category::get();
-        return view('pinjam.create', compact('categories'));
+        $anggotas = Anggota::get();
+        $kode_unik = Pinjam::get()->last();
+        $id_pinjam = isset($kode_unik->id) ? ($kode_unik->id == "" ? 1 : $kode_unik->id) : '';
+        $id_pinjam++;
+        $kode_transaksi = "PJM" . date("dmY") . sprintf("%03s", $id_pinjam);
+
+        return view('pinjam.create', compact('categories', 'anggotas', 'kode_transaksi'));
     }
 
     /**
@@ -31,19 +43,35 @@ class Pinjamcontroller extends Controller
      */
     public function store(Request $request)//to insert
     {
-        $category = new category;
-        $category->category_name = $request->category_name;
+        // $category = new category;
+        // $category->category_name = $request->category_name;
 
-        $category->save();
+        // $pinjam->save();
 
         //cara ke dua
+        $pinjam = Pinjam::create([
+            'kode_transaksi' => $request->kode_transaksi,
+            'anggota_id' => $request->anggota_id,
+            'tgl_pinjam' => $request->tgl_pinjam,
+            'tgl_kembali' => $request->tgl_kembali,
+            'petugas' => (Auth::user()->name ?? 'ajii'),
+        ]);
+        if ($pinjam) {
+            foreach ($request->buku_id as $key => $val) {
+                DetailPinjam::create([
+                    'pinjam_id' => $val,
+                    'buku_id' => $pinjam->id,
+                ]);
+            }
+        }
+        // Alert::success('GoodJob, Transaksi Pinjam Berhasil di Buat');
         // User::create([
         //     'name' => $request -> name,
         //     'email' => $request -> email,
         //     'password' => $request -> password,
         // ]);
         // User::create($request->all());
-        return redirect()->to('category');
+        return redirect()->to('pinjam')->with('message', 'Data berhasil diubah');// return redirecy
     }
 
     /**

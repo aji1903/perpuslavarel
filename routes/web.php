@@ -15,6 +15,7 @@ Route::resource('category', \App\Http\Controllers\Categorycontroller::class);
 Route::resource('books', \App\Http\Controllers\Bookscontroller::class);
 Route::resource('pinjam', \App\Http\Controllers\Pinjamcontroller::class);
 Route::get('getBuku/{category_id}', [\App\Http\Controllers\AjaxController::class, 'getDataBuku']);
+Route::get('getBooks/{buku_id}', [\App\Http\Controllers\AjaxController::class, 'getBuku']);
 
 
 // Route::get('delete',$id);

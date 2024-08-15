@@ -105,16 +105,17 @@
     <script src="{{asset('assets/adm/dist/js/demo.js')}}"></script>
     <script>
         $('#tambah-row').click(function () {
-            if ($(#category_id).val() == "") {
+            if ($('#category_id').val() == "") {
                 alert('Please select category');
                 return false;
             }
             let tbody = $("tbody");
             let no = tbody.find("tr").length + 1, penerbit = $('#nama_penerbit').val(),
-                judul_buku = $('#buku_id').find("option:selected").text();
+                judul_buku = $('#buku_id').find("option:selected").text(),
+                buku_id = $('#buku_id').val();
             let newRow = "<tr>";
             newRow += "<td>" + no + "</td>";
-            newRow += "<td>" + judul_buku + "</td>";
+            newRow += "<td>" + judul_buku + "<input type = 'hidden' name='buku_id[]' id='buku_id' value='" + buku_id + "'</td>";
             newRow += "<td>" + penerbit + "</td>";
             newRow += "<td><button class='btn btn-danger btn-sm hapus-row'>Hapus Row</button></td>";
             newRow += "</td>";
@@ -137,7 +138,7 @@
                 success: function (data) {
                     option += "<option value=''>Pilih Judul Buku</option>"
                     $.each(data.data, function (index, value) {
-                        $('#nama_penerbit').val(value.penerbit);
+                        // $('#nama_penerbit').val(value.penerbit);
                         // console.log(value);
                         option += "<option value=" + value.id + ">" + value.judul + "</option>";
                     });
@@ -146,6 +147,18 @@
                 }
             });
         })
+        $('#buku_id').change(function () {
+            let buku_id = $(this).val();
+            $.ajax({
+                url: "/getBooks/" + buku_id,
+                type: "get",
+                dataType: "json",
+                success: function (res) {
+                    console.log(res);
+                    $('#nama_penerbit').val(res.data.penerbit);
+                }
+            });
+        });
     </script>
 </body>
 
